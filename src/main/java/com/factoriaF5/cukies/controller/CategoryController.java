@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.controller;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -8,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/categories")
@@ -28,4 +30,13 @@ public class CategoryController {
     public ResponseEntity<List<CategoryDTO>> getCategories(){
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
+    @GetMapping("/{id}")
+    public ResponseEntity<CategoryDTO> getCategoryById(@PathVariable int id){
+        Optional<CategoryDTO> categoryDTO = categoryService.getCategoryById(id);
+        if (categoryDTO.isPresent()){
+            return ResponseEntity.ok(categoryDTO.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }

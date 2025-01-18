@@ -2,12 +2,15 @@ package com.factoriaF5.cukies.service;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
 import com.factoriaF5.cukies.DTOs.category.CategoryMapper;
+import com.factoriaF5.cukies.exception.CategoryNotFoundException;
 import com.factoriaF5.cukies.exception.EmptyException;
+import com.factoriaF5.cukies.exception.ObjectNotFoundException;
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CategoryService {
@@ -26,5 +29,14 @@ public class CategoryService {
         if (categories.isEmpty()) throw new EmptyException();
         List<CategoryDTO> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
         return listCategories;
+    }
+    public Optional<CategoryDTO> getCategoryById(int id){
+        Optional<Category> foundCategory = categoryRepository.findById(id);
+        if (foundCategory.isPresent()){
+            CategoryDTO categoryById = CategoryMapper.entityToDTO(foundCategory.get());
+            return Optional.of(categoryById);
+        }
+        throw new RuntimeException("not found category");
+
     }
 }
