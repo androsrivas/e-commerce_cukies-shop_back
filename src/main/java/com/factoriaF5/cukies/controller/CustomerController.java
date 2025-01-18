@@ -22,8 +22,4 @@ public class CustomerController {
         return new ResponseEntity<>(customerService.saveCustomer(customerDTORequest), HttpStatus.CREATED);
     }
 
-    @ExceptionHandler(CustomerExistsException.class)
-    public ResponseEntity<String> handleCustomerExists(CustomerExistsException e) {
-        return ResponseEntity.status(HttpStatus.CONFLICT).body("Este email ya está registrado: " + e.getEmail());
-    }
 }
