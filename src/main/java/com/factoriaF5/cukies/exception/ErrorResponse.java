@@ -14,14 +14,21 @@ import java.time.format.DateTimeFormatter;
 public class ErrorResponse {
     private String message;
     private LocalDateTime timestamp;
+    private Object data;
+    private int errorCount;
 
-    public ErrorResponse(String message) {
+    public ErrorResponse(String message, Object data, int errorCount) {
         this.message = message;
         this.timestamp = LocalDateTime.now();
+        this.data = data;
+        this.errorCount = errorCount;
     }
     public String getTimestamp(){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy  HH:mm:ss");
         return timestamp.format(formatter);
     }
 
+    public String getMessage() {
+        return message;
+    }
 }
