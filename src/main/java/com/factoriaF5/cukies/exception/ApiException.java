@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
+@AllArgsConstructor
 public abstract class ApiException extends RuntimeException {
     private final HttpStatus status;
 

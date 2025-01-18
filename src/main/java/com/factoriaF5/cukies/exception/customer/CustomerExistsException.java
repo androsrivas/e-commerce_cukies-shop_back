@@ -1,5 +1,6 @@
-package com.factoriaF5.cukies.exception;
+package com.factoriaF5.cukies.exception.customer;
 
+import com.factoriaF5.cukies.exception.ApiException;
 import org.springframework.http.HttpStatus;
 
 public class CustomerExistsException extends ApiException {

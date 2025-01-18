@@ -1,19 +1,18 @@
 package com.factoriaF5.cukies.exception;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
-public class GlobalExceptionHanlder {
+public class GlobalExceptionHandler {
 
-    //maneja excepciones específicas
+    //maneja excepciones específicas que extienden de ApiException
     @ExceptionHandler(ApiException.class)
      public ResponseEntity<Object> handleInvalidArgument(ApiException e) {
          ErrorResponse errorResponse = new ErrorResponse(e.getMessages(), e.getStatus());
@@ -35,6 +34,15 @@ public class GlobalExceptionHanlder {
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 List.of("An unexpected error occurred: " + e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    //maneja excepciones si hay problemas con la conexión de la base de datos
+    public ResponseEntity<ErrorResponse> handleDatabaseException(DataAccessException e) {
+        ErrorResponse errorResponse = new ErrorResponse(
+                List.of("Database error: " + e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
