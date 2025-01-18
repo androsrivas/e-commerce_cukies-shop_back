@@ -4,7 +4,7 @@ public class CustomerExistsException extends RuntimeException {
   private final String email;
 
   public CustomerExistsException(String email) {
-    super(email);
+    super("An account with " + email + " already exists.");
       this.email = email;
   }
 
