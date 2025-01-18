@@ -36,7 +36,23 @@ public class CategoryService {
             CategoryDTO categoryById = CategoryMapper.entityToDTO(foundCategory.get());
             return Optional.of(categoryById);
         }
-        throw new RuntimeException("not found category");
-
+        throw new EmptyException();
+    }
+    public void deleteCategory(int id){
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isPresent()){
+            categoryRepository.delete(category.get());
+        }
+        throw new EmptyException();
+    }
+    public CategoryDTO updateCategory(int id, CategoryDTO categoryDTO){
+        Optional<Category> existingCategory = categoryRepository.findById(id);
+        if (existingCategory.isPresent()){
+            Category categoryToUpdate = existingCategory.get();
+            categoryToUpdate.setName(categoryDTO.name());
+            Category updatedCategory = categoryRepository.save(categoryToUpdate);
+            return  CategoryMapper.entityToDTO(updatedCategory);
+        }
+        throw new EmptyException();
     }
 }

@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.controller;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.exception.EmptyException;
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.service.CategoryService;
 import jakarta.validation.Valid;
@@ -37,6 +38,24 @@ public class CategoryController {
             return ResponseEntity.ok(categoryDTO.get());
         }
         return ResponseEntity.notFound().build();
+    }
+    @PutMapping("/{id}")
+    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable int id, @Valid @RequestBody CategoryDTO categoryDTO){
+        try {
+            CategoryDTO updatedCategory = categoryService.updateCategory(id, categoryDTO);
+            return ResponseEntity.ok(updatedCategory);
+        } catch (EmptyException exception){
+            return ResponseEntity.notFound().build();
+        }
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCategory(@PathVariable int id){
+        try {
+            categoryService.deleteCategory(id);
+            return ResponseEntity.noContent().build();
+        } catch (EmptyException exception){
+            return  ResponseEntity.notFound().build();
+        }
     }
 
 }
