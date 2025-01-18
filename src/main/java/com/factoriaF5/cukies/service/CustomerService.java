@@ -24,13 +24,13 @@ public class CustomerService {
 
     @Transactional
     public CustomerDTOResponse saveCustomer(CustomerDTORequest customerRequest) {
-        Customer newCustomer = customerMapper.toEntity(customerRequest);
-
-        if (customerRepository.existsByEmail(newCustomer.getEmail())){
+        if (customerRepository.existsByEmail(customerRequest.email())) {
             throw new CustomerExistsException(customerRequest.email());
         }
 
+        Customer newCustomer = customerMapper.toEntity(customerRequest);
         Customer savedCustomer = customerRepository.save(newCustomer);
+
         return customerMapper.toDTOResponse(savedCustomer);
     }
 

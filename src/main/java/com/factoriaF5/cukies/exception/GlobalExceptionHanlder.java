@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class GlobalExceptionHanlder {
@@ -15,25 +16,28 @@ public class GlobalExceptionHanlder {
     //maneja excepciones específicas
     @ExceptionHandler(ApiException.class)
      public ResponseEntity<Object> handleInvalidArgument(ApiException e) {
-         List<String> errors = e.getDetails();
-         ErrorResponse errorResponse = new ErrorResponse(errors, e.getStatus().value());
+         ErrorResponse errorResponse = new ErrorResponse(e.getMessages(), e.getStatus());
         return new ResponseEntity<>(errorResponse, e.getStatus());
      }
 
      //maneja excepciones de validación
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
-        List<String> errors = new ArrayList<>();
-        e.getBindingResult().getAllErrors().forEach(
-                error -> errors.add(error.getDefaultMessage()));
-        return new ResponseEntity<>(new ErrorResponse(errors, HttpStatus.BAD_REQUEST.value()), HttpStatus.BAD_REQUEST);
+        List<String> errors = e.getBindingResult().getAllErrors()
+                .stream()
+                .map(error -> error.getDefaultMessage())
+                .collect(Collectors.toList());
+
+        return new ResponseEntity<>(new ErrorResponse(errors, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
     //maneja excepciones genéricas
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
-        List<String> errors = new ArrayList<>();
-        errors.add("An unexpected error occurred: " + e.getMessage());
-        return new ResponseEntity<>(new ErrorResponse(errors, HttpStatus.INTERNAL_SERVER_ERROR.value()), HttpStatus.INTERNAL_SERVER_ERROR);
+        ErrorResponse errorResponse = new ErrorResponse(
+                List.of("An unexpected error occurred: " + e.getMessage()),
+                HttpStatus.INTERNAL_SERVER_ERROR
+        );
+        return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

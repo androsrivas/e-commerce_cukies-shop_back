@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.exception;
 
 import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,10 +14,12 @@ public class ErrorResponse {
     private List<String> messages;
     private LocalDateTime timestamp = LocalDateTime.now();
     private int statusCode;
+    private String status;
 
-    public ErrorResponse(List<String> messages, int statusCode) {
+    public ErrorResponse(List<String> messages, HttpStatus status) {
         this.messages = messages;
         this.timestamp = LocalDateTime.now();
-        this.statusCode = statusCode;
+        this.statusCode = status.value();
+        this.status = status.name();
     }
 }
