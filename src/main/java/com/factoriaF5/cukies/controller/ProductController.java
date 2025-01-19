@@ -42,7 +42,7 @@ public class ProductController {
         return new ResponseEntity<>(newProductDTO, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable int id, @RequestBody ProductDTO updateProductDTO){
+    public ResponseEntity<ProductDTO> updateProduct(@PathVariable int id,@Valid @RequestBody ProductDTO updateProductDTO){
         try {
             ProductDTO updatedProductDTO = productService.updatedProduct(id, updateProductDTO);
             return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
@@ -54,9 +54,8 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable int id){
         Optional<ProductDTO> productOptionalDTO = productService.findProductById(id);
         if (productOptionalDTO.isPresent()){
-            Product product = productOptionalDTO.get();
             productService.deleteProduct(id);
-            String message = "Product " + product.getName() + " has been deleted.";
+            String message = "Product " + productOptionalDTO.get().name() + " has been deleted.";
             return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);

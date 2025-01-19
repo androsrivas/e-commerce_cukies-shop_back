@@ -19,6 +19,10 @@ public class Product {
     private boolean featured;
 
     public Product(String name, double price, String imageUrl, boolean featured) {
+        this.name = name;
+        this.price = price;
+        this.imageUrl = imageUrl;
+        this.featured = featured;
     }
 
 
