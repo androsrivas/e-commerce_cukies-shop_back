@@ -2,9 +2,7 @@ package com.factoriaF5.cukies.service;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
 import com.factoriaF5.cukies.DTOs.category.CategoryMapper;
-import com.factoriaF5.cukies.exception.CategoryNotFoundException;
 import com.factoriaF5.cukies.exception.EmptyException;
-import com.factoriaF5.cukies.exception.ObjectNotFoundException;
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -30,11 +28,11 @@ public class CategoryService {
         List<CategoryDTO> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
         return listCategories;
     }
-    public Optional<CategoryDTO> getCategoryById(int id){
+    public Optional<CategoryDTO> findCategoryById(int id){
         Optional<Category> foundCategory = categoryRepository.findById(id);
         if (foundCategory.isPresent()){
-            CategoryDTO categoryById = CategoryMapper.entityToDTO(foundCategory.get());
-            return Optional.of(categoryById);
+            CategoryDTO categoryDTOById = CategoryMapper.entityToDTO(foundCategory.get());
+            return Optional.of(categoryDTOById);
         }
         throw new EmptyException();
     }
@@ -46,13 +44,14 @@ public class CategoryService {
         throw new EmptyException();
     }
     public CategoryDTO updateCategory(int id, CategoryDTO categoryDTO){
-        Optional<Category> existingCategory = categoryRepository.findById(id);
-        if (existingCategory.isPresent()){
-            Category categoryToUpdate = existingCategory.get();
+        Optional<Category> foundCategory = categoryRepository.findById(id);
+        if (foundCategory.isPresent()){
+            Category categoryToUpdate = foundCategory.get();
             categoryToUpdate.setName(categoryDTO.name());
             Category updatedCategory = categoryRepository.save(categoryToUpdate);
             return  CategoryMapper.entityToDTO(updatedCategory);
         }
+        //comprobar excepción personalizada
         throw new EmptyException();
     }
 }
