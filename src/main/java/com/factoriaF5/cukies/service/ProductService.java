@@ -1,5 +1,7 @@
 package com.factoriaF5.cukies.service;
 
+import com.factoriaF5.cukies.DTOs.product.ProductDTO;
+import com.factoriaF5.cukies.DTOs.product.ProductMapper;
 import com.factoriaF5.cukies.exception.ObjectNotFoundException;
 import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.repository.ProductRepository;
@@ -16,32 +18,42 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<Product> getAllProducts(){
-        return productRepository.findAll();
+    public List<ProductDTO> getProducts(){
+        List<Product> products = productRepository.findAll();
+        if (products.isEmpty()) throw new RuntimeException();
+        List<ProductDTO> productDTOList = products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
+        return productDTOList;
     }
-    public Product createProduct(Product newProduct){
-        return productRepository.save(newProduct);
+    public ProductDTO createProduct(ProductDTO productDTO){
+        Product newProduct = ProductMapper.dtoToEntity(productDTO);
+        Product savedProduct = productRepository.save(newProduct);
+        return ProductMapper.entityToDTO(savedProduct);
     }
-    public Optional<Product> findProductById(int id){
+    public Optional<ProductDTO> findProductById(int id){
         Optional<Product> foundProduct = productRepository.findById(id);
         if (foundProduct.isPresent()){
-            return productRepository.findById(id);
+            ProductDTO productDTOById = ProductMapper.entityToDTO(foundProduct.get());
+           return Optional.of(productDTOById);
         }
         throw new ObjectNotFoundException("Product", id);
     }
     public void deleteProduct(int id){
-        productRepository.deleteById(id);
-    }
-    public Product updatedProduct(int id, Product updateProduct){
-        Optional<Product> foundProduct = productRepository.findById(id);
-        if (foundProduct.isPresent()){
-            Product existingProduct = foundProduct.get();
-            existingProduct.setName(updateProduct.getName());
-            existingProduct.setPrice(updateProduct.getPrice());
-            existingProduct.setImageUrl(updateProduct.getImageUrl());
-            existingProduct.setFeatured(updateProduct.isFeatured());
+        Optional<Product> product = productRepository.findById(id);
+        if (product.isPresent()){
+            productRepository.deleteById(id);
+        }
 
-            return productRepository.save(existingProduct);
+    }
+    public ProductDTO updatedProduct(int id, ProductDTO updateProductDTO){
+        Optional<Product> existingProduct = productRepository.findById(id);
+        if (existingProduct.isPresent()){
+            Product productToUpdate = existingProduct.get();
+            productToUpdate.setName(updateProductDTO.name());
+            productToUpdate.setPrice(updateProductDTO.price());
+            productToUpdate.setImageUrl(updateProductDTO.imageUrl());
+            productToUpdate.setFeatured(updateProductDTO.featured());
+            Product updatedProduct = productRepository.save(productToUpdate);
+            return ProductMapper.entityToDTO(updatedProduct);
         }
         throw new ObjectNotFoundException("Product", id);
     }
