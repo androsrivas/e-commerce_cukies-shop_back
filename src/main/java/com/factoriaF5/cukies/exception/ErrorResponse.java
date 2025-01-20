@@ -22,4 +22,5 @@ public class ErrorResponse {
         this.statusCode = status.value();
         this.status = status.name();
     }
+
 }
