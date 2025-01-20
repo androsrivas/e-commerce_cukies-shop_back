@@ -1,27 +1,26 @@
 package com.factoriaF5.cukies.exception;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.List;
 
-@Setter
-@Getter
 @NoArgsConstructor
-
+@AllArgsConstructor
+@Getter
+@Setter
 public class ErrorResponse {
-    private String message;
-    private LocalDateTime timestamp;
+    private List<String> messages;
+    private LocalDateTime timestamp = LocalDateTime.now();
+    private int statusCode;
+    private String status;
 
-    public ErrorResponse(String message) {
-        this.message = message;
+    public ErrorResponse(List<String> messages, HttpStatus status) {
+        this.messages = messages;
         this.timestamp = LocalDateTime.now();
-    }
-    public String getTimestamp(){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy  HH:mm:ss");
-        return timestamp.format(formatter);
+        this.statusCode = status.value();
+        this.status = status.name();
     }
 
 }
