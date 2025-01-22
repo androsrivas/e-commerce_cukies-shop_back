@@ -3,6 +3,8 @@ package com.factoriaF5.cukies.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,6 +24,9 @@ public class Customer {
 
     @Column(name = "password", nullable = false)
     private String password;
+
+    @ManyToMany(mappedBy = "customers")
+    private List<Product> products;
 
     public Customer(String username, String email, String password) {
         this.username = username;

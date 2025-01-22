@@ -1,5 +1,6 @@
 package com.factoriaF5.cukies.controller;
 
+import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
 import com.factoriaF5.cukies.DTOs.product.ProductDTO;
 import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.service.ProductService;
@@ -59,6 +60,19 @@ public class ProductController {
             return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+    }
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@RequestParam String categoryName){
+        CategoryDTO categoryDTO = new CategoryDTO(categoryName);
+        List<ProductDTO> products = productService.getProductsByCategory(categoryDTO);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+    @GetMapping("/filter/price")
+    public ResponseEntity<List<ProductDTO>> getProductsByPriceRange(
+            @RequestParam double minPrice,
+            @RequestParam double maxPrice) {
+        List<ProductDTO> products = productService.getProductsByPriceRange(minPrice, maxPrice);
+        return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
 }

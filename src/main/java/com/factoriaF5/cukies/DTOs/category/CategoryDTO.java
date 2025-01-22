@@ -7,5 +7,6 @@ public record CategoryDTO(
         @NotBlank(message = "Name is required")
         @Size(min = 1, max = 30, message = "Name must be at least 1 characters and max 30 characters.")
         String name
+
 ) {
 }
