@@ -1,8 +1,7 @@
 package com.factoriaF5.cukies.controller;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
 import com.factoriaF5.cukies.DTOs.product.ProductDTO;
-import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -63,7 +62,7 @@ public class ProductController {
     }
     @GetMapping("/filter")
     public ResponseEntity<List<ProductDTO>> getProductsByCategory(@RequestParam String categoryName){
-        CategoryDTO categoryDTO = new CategoryDTO(categoryName);
+        CategoryDTORequest categoryDTO = new CategoryDTORequest(categoryName);
         List<ProductDTO> products = productService.getProductsByCategory(categoryDTO);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }

@@ -1,9 +1,8 @@
 package com.factoriaF5.cukies.service;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
 import com.factoriaF5.cukies.DTOs.product.ProductDTO;
 import com.factoriaF5.cukies.DTOs.product.ProductMapper;
-import com.factoriaF5.cukies.exception.CategoryNotFoundException;
 import com.factoriaF5.cukies.exception.ObjectNotFoundException;
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.model.Product;
@@ -31,7 +30,7 @@ public class ProductService {
         return productDTOList;
     }
     public ProductDTO createProduct(ProductDTO productDTO){
-        Product newProduct = ProductMapper.dtoToEntity(productDTO);
+        Product newProduct = ProductMapper.dtoToEntity(productDTO, categoryRepository);
         Product savedProduct = productRepository.save(newProduct);
         return ProductMapper.entityToDTO(savedProduct);
     }
@@ -64,7 +63,7 @@ public class ProductService {
         throw new ObjectNotFoundException("Product", id);
     }
 
-    public List<ProductDTO> getProductsByCategory (CategoryDTO categoryDTO){
+    public List<ProductDTO> getProductsByCategory (CategoryDTORequest categoryDTO){
         Optional<Category> categoryOptional = categoryRepository.findByName(categoryDTO.name());
         if (categoryOptional.isPresent()){
             List<Product> productsByCategory = productRepository.findByCategory(categoryOptional);

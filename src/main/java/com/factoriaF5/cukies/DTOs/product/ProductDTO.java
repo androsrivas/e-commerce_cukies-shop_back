@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.DTOs.product;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTOResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
@@ -17,7 +18,7 @@ public record ProductDTO(
         @URL(message = "Invalid URL. Please provide a valid URL")
         String imageUrl,
         boolean featured,
-        CategoryDTO category,
+        int categoryId,
         List<com.factoriaF5.cukies.model.Customer> customers
 
 ) {
