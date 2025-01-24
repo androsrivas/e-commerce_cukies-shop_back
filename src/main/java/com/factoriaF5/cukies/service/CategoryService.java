@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.service;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTOResponse;
 import com.factoriaF5.cukies.DTOs.category.CategoryMapper;
 import com.factoriaF5.cukies.exception.category.CategoriesNotFoundException;
 import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
@@ -18,21 +19,21 @@ public class CategoryService {
     public CategoryService(CategoryRepository categoryRepository) {
         this.categoryRepository = categoryRepository;
     }
-    public CategoryDTO createCategory(CategoryDTO categoryDTO){
-        Category newCategory = CategoryMapper.dtoToEntity(categoryDTO);
+    public CategoryDTOResponse createCategory(CategoryDTORequest categoryDTORequest){
+        Category newCategory = CategoryMapper.dtoToEntity(categoryDTORequest);
         Category savedCategory = categoryRepository.save(newCategory);
         return CategoryMapper.entityToDTO(savedCategory);
     }
-    public List<CategoryDTO> getCategories(){
+    public List<CategoryDTOResponse> getCategories(){
         List<Category> categories = categoryRepository.findAll();
         if (categories.isEmpty()) throw new CategoriesNotFoundException();
-        List<CategoryDTO> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
+        List<CategoryDTOResponse> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
         return listCategories;
     }
-    public Optional<CategoryDTO> findCategoryById(int id){
+    public Optional<CategoryDTOResponse> findCategoryById(int id){
         Optional<Category> foundCategory = categoryRepository.findById(id);
         if (foundCategory.isPresent()){
-            CategoryDTO categoryDTOById = CategoryMapper.entityToDTO(foundCategory.get());
+            CategoryDTOResponse categoryDTOById = CategoryMapper.entityToDTO(foundCategory.get());
             return Optional.of(categoryDTOById);
         }
         throw new CategoryNotFoundException("ID", id);
@@ -44,11 +45,11 @@ public class CategoryService {
         }
         throw new CategoryNotFoundException("ID", id);
     }
-    public CategoryDTO updateCategory(int id, CategoryDTO categoryDTO){
+    public CategoryDTOResponse updateCategory(int id, CategoryDTORequest categoryDTORequest){
         Optional<Category> foundCategory = categoryRepository.findById(id);
         if (foundCategory.isPresent()){
             Category categoryToUpdate = foundCategory.get();
-            categoryToUpdate.setName(categoryDTO.name());
+            categoryToUpdate.setName(categoryDTORequest.name());
             Category updatedCategory = categoryRepository.save(categoryToUpdate);
             return  CategoryMapper.entityToDTO(updatedCategory);
         }

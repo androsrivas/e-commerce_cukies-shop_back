@@ -1,7 +1,9 @@
 package com.factoriaF5.cukies.controller;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
+
 import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTOResponse;
 import com.factoriaF5.cukies.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,24 +23,24 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO categoryDTO){
-        CategoryDTO newCategoryDTO = categoryService.createCategory(categoryDTO);
-        return new ResponseEntity<>(newCategoryDTO, HttpStatus.CREATED);
+    public ResponseEntity<CategoryDTOResponse> saveCategory(@Valid @RequestBody CategoryDTORequest categoryDTORequest){
+        CategoryDTOResponse newCategoryDTOResponse = categoryService.createCategory(categoryDTORequest);
+        return new ResponseEntity<>(newCategoryDTOResponse, HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryDTO>> getCategories(){
+    public ResponseEntity<List<CategoryDTOResponse>> getCategories(){
         return new ResponseEntity<>(categoryService.getCategories(), HttpStatus.OK);
     }
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<CategoryDTO>> getCategoryById(@PathVariable int id){
+    public ResponseEntity<Optional<CategoryDTOResponse>> getCategoryById(@PathVariable int id){
     return new ResponseEntity<>(categoryService.findCategoryById(id), HttpStatus.OK);
 
     }
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateCategory(@PathVariable int id, @Valid @RequestBody CategoryDTO categoryDTO){
+    public ResponseEntity<CategoryDTOResponse> updateCategory(@PathVariable int id, @Valid @RequestBody CategoryDTORequest categoryDTORequest){
         try {
-            CategoryDTO updatedCategoryDTO = categoryService.updateCategory(id, categoryDTO);
+            CategoryDTOResponse updatedCategoryDTO = categoryService.updateCategory(id, categoryDTORequest);
             return new ResponseEntity<>(updatedCategoryDTO, HttpStatus.OK);
         } catch (CategoryNotFoundException exception){
             //personalizar exception
