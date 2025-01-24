@@ -3,9 +3,10 @@ package com.factoriaF5.cukies.service;
 import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
 import com.factoriaF5.cukies.DTOs.product.ProductDTO;
 import com.factoriaF5.cukies.DTOs.product.ProductMapper;
-import com.factoriaF5.cukies.exception.ObjectNotFoundException;
-import com.factoriaF5.cukies.model.Category;
+import com.factoriaF5.cukies.exception.product.ProductNotFoundException;
+import com.factoriaF5.cukies.exception.product.ProductsNotFoundException;
 import com.factoriaF5.cukies.model.Product;
+import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,7 @@ public class ProductService {
 
     public List<ProductDTO> getProducts(){
         List<Product> products = productRepository.findAll();
-        if (products.isEmpty()) throw new RuntimeException();
+        if (products.isEmpty()) throw new ProductsNotFoundException();
         List<ProductDTO> productDTOList = products.stream().map(product -> ProductMapper.entityToDTO(product)).toList();
         return productDTOList;
     }
@@ -40,7 +41,7 @@ public class ProductService {
             ProductDTO productDTOById = ProductMapper.entityToDTO(foundProduct.get());
             return Optional.of(productDTOById);
         }
-        throw new ObjectNotFoundException("Product", id);
+        throw new ProductNotFoundException("ID", id);
     }
     public void deleteProduct(int id){
         Optional<Product> product = productRepository.findById(id);
@@ -60,7 +61,7 @@ public class ProductService {
             Product updatedProduct = productRepository.save(productToUpdate);
             return ProductMapper.entityToDTO(updatedProduct);
         }
-        throw new ObjectNotFoundException("Product", id);
+        throw new ProductNotFoundException("ID", id);
     }
 
     public List<ProductDTO> getProductsByCategory (CategoryDTORequest categoryDTO){
