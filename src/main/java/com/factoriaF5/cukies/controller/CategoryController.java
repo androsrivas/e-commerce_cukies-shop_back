@@ -1,7 +1,7 @@
 package com.factoriaF5.cukies.controller;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
-import com.factoriaF5.cukies.exception.EmptyException;
+import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
 import com.factoriaF5.cukies.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -40,7 +40,7 @@ public class CategoryController {
         try {
             CategoryDTO updatedCategoryDTO = categoryService.updateCategory(id, categoryDTO);
             return new ResponseEntity<>(updatedCategoryDTO, HttpStatus.OK);
-        } catch (EmptyException exception){
+        } catch (CategoryNotFoundException exception){
             //personalizar exception
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -50,7 +50,7 @@ public class CategoryController {
         try {
             categoryService.deleteCategory(id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (EmptyException exception){
+        } catch (CategoryNotFoundException exception){
             //personalizar exception
             return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

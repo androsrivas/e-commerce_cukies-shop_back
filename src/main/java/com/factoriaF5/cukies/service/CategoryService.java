@@ -2,7 +2,8 @@ package com.factoriaF5.cukies.service;
 
 import com.factoriaF5.cukies.DTOs.category.CategoryDTO;
 import com.factoriaF5.cukies.DTOs.category.CategoryMapper;
-import com.factoriaF5.cukies.exception.EmptyException;
+import com.factoriaF5.cukies.exception.category.CategoriesNotFoundException;
+import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class CategoryService {
     }
     public List<CategoryDTO> getCategories(){
         List<Category> categories = categoryRepository.findAll();
-        if (categories.isEmpty()) throw new EmptyException();
+        if (categories.isEmpty()) throw new CategoriesNotFoundException();
         List<CategoryDTO> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
         return listCategories;
     }
@@ -34,14 +35,14 @@ public class CategoryService {
             CategoryDTO categoryDTOById = CategoryMapper.entityToDTO(foundCategory.get());
             return Optional.of(categoryDTOById);
         }
-        throw new EmptyException();
+        throw new CategoryNotFoundException("ID", id);
     }
     public void deleteCategory(int id){
         Optional<Category> category = categoryRepository.findById(id);
         if (category.isPresent()){
             categoryRepository.delete(category.get());
         }
-        throw new EmptyException();
+        throw new CategoryNotFoundException("ID", id);
     }
     public CategoryDTO updateCategory(int id, CategoryDTO categoryDTO){
         Optional<Category> foundCategory = categoryRepository.findById(id);
@@ -51,7 +52,7 @@ public class CategoryService {
             Category updatedCategory = categoryRepository.save(categoryToUpdate);
             return  CategoryMapper.entityToDTO(updatedCategory);
         }
-        //comprobar excepción personalizada
-        throw new EmptyException();
+
+        throw new CategoryNotFoundException("ID", id);
     }
 }

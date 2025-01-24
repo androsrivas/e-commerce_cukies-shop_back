@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     //maneja excepciones específicas que extienden de ApiException
     @ExceptionHandler(ApiException.class)
-     public ResponseEntity<Object> handleInvalidArgument(ApiException e) {
+     public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {
          ErrorResponse errorResponse = new ErrorResponse(e.getMessages(), e.getStatus());
         return new ResponseEntity<>(errorResponse, e.getStatus());
      }
@@ -31,6 +31,7 @@ public class GlobalExceptionHandler {
     }
 
     //maneja excepciones genéricas
+    @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 List.of("An unexpected error occurred: " + e.getMessage()),
@@ -40,6 +41,7 @@ public class GlobalExceptionHandler {
     }
 
     //maneja excepciones si hay problemas con la conexión de la base de datos
+    @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDatabaseException(DataAccessException e) {
         ErrorResponse errorResponse = new ErrorResponse(
                 List.of("Database error: " + e.getMessage()),
