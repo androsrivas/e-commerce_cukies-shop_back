@@ -1,6 +1,5 @@
 package com.factoriaF5.cukies.model;
 
-import com.factoriaF5.cukies.DTOs.customer.CustomerDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,6 +18,7 @@ public class Product {
     private String name;
     private double price;
     private String imageUrl;
+    private String description;
     private boolean featured;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -33,14 +33,14 @@ public class Product {
     )
     private List<Customer> customers;
 
-    public Product(String name, double price, String imageUrl, boolean featured) {
+    public Product(String name, double price, String imageUrl, String description, boolean featured) {
         this.name = name;
         this.price = price;
         this.imageUrl = imageUrl;
+        this.description = description;
         this.featured = featured;
 
     }
-
 
     public Product(String name, double price, String imageUrl, boolean featured, Category category) {
         this.name = name;
