@@ -3,6 +3,8 @@ package com.factoriaF5.cukies.service;
 import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
 import com.factoriaF5.cukies.DTOs.product.ProductDTO;
 import com.factoriaF5.cukies.DTOs.product.ProductMapper;
+import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
+import com.factoriaF5.cukies.exception.product.InvalidPriceRangeException;
 import com.factoriaF5.cukies.exception.product.ProductNotFoundException;
 import com.factoriaF5.cukies.exception.product.ProductsNotFoundException;
 import com.factoriaF5.cukies.model.Product;
@@ -47,6 +49,8 @@ public class ProductService {
         Optional<Product> product = productRepository.findById(id);
         if (product.isPresent()){
             productRepository.deleteById(id);
+        } else {
+            throw new ProductNotFoundException("ID", id);
         }
 
     }
@@ -73,9 +77,10 @@ public class ProductService {
                     .toList();
         }
 
-        throw new RuntimeException();
+        throw new CategoryNotFoundException("name", categoryDTO.name());
     }
     public List<ProductDTO> getProductsByPriceRange(double minPrice, double maxPrice) {
+        if (minPrice > maxPrice) throw new InvalidPriceRangeException(minPrice, maxPrice);
         List<Product> productsByPrice = productRepository.findByPriceBetween(minPrice, maxPrice);
         return productsByPrice.stream()
                 .map(product -> ProductMapper.entityToDTO(product)).toList();
