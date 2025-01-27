@@ -5,9 +5,9 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import org.hibernate.validator.constraints.URL;
 
-public record ProductDTO(
+public record ProductSummaryDTORequest(
         @NotBlank(message = "Name is required")
-        @Size(min = 1, max = 50, message = "Name must be at least 2 characters and max 50 characters.")
+        @Size(min = 2, max = 50, message = "Name must be at least 2 characters and max 50 characters.")
         String name,
         @Positive
         double price,

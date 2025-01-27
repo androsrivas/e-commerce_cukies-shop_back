@@ -1,7 +1,11 @@
 package com.factoriaF5.cukies.controller;
 
-import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
-import com.factoriaF5.cukies.DTOs.product.ProductDTO;
+import com.factoriaF5.cukies.DTOs.product.ProductDetailDTORequest;
+import com.factoriaF5.cukies.DTOs.product.ProductDetailDTOResponse;
+import com.factoriaF5.cukies.DTOs.product.ProductSummaryDTORequest;
+import com.factoriaF5.cukies.DTOs.product.ProductSummaryDTOResponse;
+import com.factoriaF5.cukies.exception.category.CategoryNotFoundException;
+import com.factoriaF5.cukies.exception.product.ProductNotFoundException;
 import com.factoriaF5.cukies.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -21,38 +25,39 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProductDTO>> getAll(){
+    public ResponseEntity<List<ProductSummaryDTOResponse>> getAll(){
         return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Optional<ProductDTO>> getProductById(@PathVariable int id){
-        Optional<ProductDTO> productDTO = productService.findProductById(id);
-        if (productDTO.isPresent()){
-            return new ResponseEntity<>(productDTO, HttpStatus.OK);
-        }
-        //Aquí no tendría que devolver una exception?
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    public ResponseEntity<ProductDetailDTOResponse> getProductById(@PathVariable int id){
+        return productService.findProductById(id)
+                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
+                .orElseThrow(() -> new ProductNotFoundException("ID", id));
     }
 
     @PostMapping
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductSummaryDTORequest productSummaryDTORequest) {
         //Hay que buscar si existen categorías y añadir listas categorías
-        ProductDTO newProductDTO = productService.createProduct(productDTO);
-        return new ResponseEntity<>(newProductDTO, HttpStatus.CREATED);
+        ProductSummaryDTOResponse newProductSummaryDTOResponse = productService.createProduct(productSummaryDTORequest);
+        return new ResponseEntity<>(newProductSummaryDTOResponse, HttpStatus.CREATED);
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ProductDTO> updateProduct(@PathVariable int id,@Valid @RequestBody ProductDTO updateProductDTO){
+    public ResponseEntity<ProductDetailDTOResponse> updateProduct(
+            @PathVariable int id,
+            @Valid @RequestBody ProductDetailDTOResponse updateProductDetailDTOResponse){
         try {
-            ProductDTO updatedProductDTO = productService.updatedProduct(id, updateProductDTO);
-            return new ResponseEntity<>(updatedProductDTO, HttpStatus.OK);
-        } catch (Exception e){
+            ProductDetailDTOResponse updatedProductDetailDTOResponse = productService.updatedProduct(id, updateProductDetailDTOResponse);
+            return new ResponseEntity<>(updatedProductDetailDTOResponse, HttpStatus.OK);
+        } catch (ProductNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } catch (CategoryNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id){
-        Optional<ProductDTO> productOptionalDTO = productService.findProductById(id);
+        Optional<ProductDetailDTOResponse> productOptionalDTO = productService.findProductById(id);
         if (productOptionalDTO.isPresent()){
             productService.deleteProduct(id);
             String message = "Product " + productOptionalDTO.get().name() + " has been deleted.";
@@ -61,16 +66,15 @@ public class ProductController {
         return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
     }
     @GetMapping("/filter")
-    public ResponseEntity<List<ProductDTO>> getProductsByCategory(@RequestParam String categoryName){
-        CategoryDTORequest categoryDTO = new CategoryDTORequest(categoryName);
-        List<ProductDTO> products = productService.getProductsByCategory(categoryDTO);
+    public ResponseEntity<List<ProductSummaryDTOResponse>> getProductsByCategory(@RequestParam String categoryName){
+        List<ProductSummaryDTOResponse> products = productService.getProductsByCategory(categoryName);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
     @GetMapping("/filter/price")
-    public ResponseEntity<List<ProductDTO>> getProductsByPriceRange(
+    public ResponseEntity<List<ProductSummaryDTOResponse>> getProductsByPriceRange(
             @RequestParam double minPrice,
             @RequestParam double maxPrice) {
-        List<ProductDTO> products = productService.getProductsByPriceRange(minPrice, maxPrice);
+        List<ProductSummaryDTOResponse> products = productService.getProductsByPriceRange(minPrice, maxPrice);
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 

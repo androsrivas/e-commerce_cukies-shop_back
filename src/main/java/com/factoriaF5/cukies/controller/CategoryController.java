@@ -49,13 +49,8 @@ public class CategoryController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCategory(@PathVariable int id){
-        try {
-            categoryService.deleteCategory(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (CategoryNotFoundException exception){
-            //personalizar exception
-            return  new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        categoryService.deleteCategory(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 }
