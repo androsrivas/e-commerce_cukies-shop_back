@@ -39,21 +39,16 @@ public class CategoryService {
         throw new CategoryNotFoundException("ID", id);
     }
     public void deleteCategory(int id){
-        Optional<Category> category = categoryRepository.findById(id);
-        if (category.isPresent()){
-            categoryRepository.delete(category.get());
-        }
-        throw new CategoryNotFoundException("ID", id);
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("ID", id));
+        categoryRepository.delete(category);
     }
     public CategoryDTOResponse updateCategory(int id, CategoryDTORequest categoryDTORequest){
-        Optional<Category> foundCategory = categoryRepository.findById(id);
-        if (foundCategory.isPresent()){
-            Category categoryToUpdate = foundCategory.get();
-            categoryToUpdate.setName(categoryDTORequest.name());
-            Category updatedCategory = categoryRepository.save(categoryToUpdate);
-            return  CategoryMapper.entityToDTO(updatedCategory);
-        }
+        Category category = categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryNotFoundException("ID", id));
+        category.setName(categoryDTORequest.name());
 
-        throw new CategoryNotFoundException("ID", id);
+        Category updatedCategory = categoryRepository.save(category);
+        return CategoryMapper.entityToDTO(updatedCategory);
     }
 }
