@@ -48,6 +48,15 @@ public class CartController {
                             LocalDateTime.now())
                     );
         }
+    }
 
+    @DeleteMapping("/{customerId}/remove/{productId}")
+    public ResponseEntity<CartDTOResponse> removeProductFromCart(
+            @PathVariable int customerId,
+            @PathVariable int productId
+    ) {
+        Customer customer = customerService.findById(customerId);
+        CartDTOResponse cartDTO = cartService.removeProductFromCart(customer, productId);
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
     }
 }

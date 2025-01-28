@@ -11,6 +11,8 @@ import com.factoriaF5.cukies.repository.CartRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 
 @Service
 public class CartService {
@@ -73,9 +75,53 @@ public class CartService {
         );
     }
 
+    public CartDTOResponse removeProductFromCart (Customer customer, int productId) {
+        Cart cart = findOrCreateCart(customer);
+        Product product = productRepository.findById(productId)
+                .orElseThrow(() -> new ProductNotFoundException("ID", productId));
+
+        CartItem existingItem = cart.getItems().stream()
+                .filter(item ->item.getProduct().getId() == productId)
+                .findFirst()
+                .orElse(null);
+
+        if (existingItem == null) {
+            return new CartDTOResponse(
+                    customer.getId(),
+                    customer.getUsername(),
+                    cartMapper.toDTOResponse(cart).items(),
+                    calculateTotal(cart),
+                    cart.getCreatedAt(),
+                    cart.getUpdatedAt()
+            );
+        }
+
+        if (existingItem.getQuantity() > 1) {
+            existingItem.setQuantity(existingItem.getQuantity() - 1);
+        } else {
+            cart.getItems().remove(existingItem);
+        }
+
+        cartRepository.save(cart);
+        return new CartDTOResponse(
+                customer.getId(),
+                customer.getUsername(),
+                cartMapper.toDTOResponse(cart).items(),
+                calculateTotal(cart),
+                cart.getCreatedAt(),
+                cart.getUpdatedAt()
+        );
+    }
+
     private double calculateTotal(Cart cart) {
-        return cart.getItems().stream()
-                .mapToDouble(item -> item.getProduct().getPrice() * item.getQuantity())
-                .sum();
+        double total = 0.0;
+
+        for (CartItem item : cart.getItems()) {
+            double price = item.getProduct().getPrice();
+            total += price * item.getQuantity();
+        }
+
+        BigDecimal roundedTotal = new BigDecimal(total).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return roundedTotal.doubleValue();
     }
 }
