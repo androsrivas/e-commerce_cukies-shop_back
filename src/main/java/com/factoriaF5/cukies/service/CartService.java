@@ -55,8 +55,9 @@ public class CartService {
             cart.getItems().add(newItem);
         }
 
+        double totalPrice = calculateTotal(cart);
         cartRepository.save(cart);
-        return cartMapper.toDTOResponse(cart);
+        return new CartDTOResponse(cart.getCustomer().getId(), cartMapper.toDTOResponse(cart).items(), totalPrice);
     }
 
     private double calculateTotal(Cart cart) {
