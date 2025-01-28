@@ -113,6 +113,23 @@ public class CartService {
         );
     }
 
+    public CartDTOResponse clearCart (Customer customer) {
+        Cart cart = cartRepository.findByCustomer(customer)
+                .orElseGet(() -> new Cart(customer));
+
+        cart.getItems().clear();
+        cartRepository.save(cart);
+
+        return new CartDTOResponse(
+                customer.getId(),
+                customer.getUsername(),
+                cartMapper.toDTOResponse(cart).items(),
+                calculateTotal(cart),
+                cart.getCreatedAt(),
+                cart.getUpdatedAt()
+        );
+    }
+
     private double calculateTotal(Cart cart) {
         double total = 0.0;
 
