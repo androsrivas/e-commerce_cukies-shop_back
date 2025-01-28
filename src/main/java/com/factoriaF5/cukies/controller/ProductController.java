@@ -45,9 +45,9 @@ public class ProductController {
     @PutMapping("/{id}")
     public ResponseEntity<ProductDetailDTOResponse> updateProduct(
             @PathVariable int id,
-            @Valid @RequestBody ProductDetailDTOResponse updateProductDetailDTOResponse){
+            @Valid @RequestBody ProductDetailDTORequest updateProductDetailDTORequest){
         try {
-            ProductDetailDTOResponse updatedProductDetailDTOResponse = productService.updatedProduct(id, updateProductDetailDTOResponse);
+            ProductDetailDTOResponse updatedProductDetailDTOResponse = productService.updatedProduct(id, updateProductDetailDTORequest);
             return new ResponseEntity<>(updatedProductDetailDTOResponse, HttpStatus.OK);
         } catch (ProductNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
