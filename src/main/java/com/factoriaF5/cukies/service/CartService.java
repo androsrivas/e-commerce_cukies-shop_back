@@ -1,6 +1,5 @@
 package com.factoriaF5.cukies.service;
 
-import com.factoriaF5.cukies.DTOs.cart.CartDTORequest;
 import com.factoriaF5.cukies.DTOs.cart.CartDTOResponse;
 import com.factoriaF5.cukies.DTOs.cart.CartMapper;
 import com.factoriaF5.cukies.exception.product.ProductNotFoundException;
@@ -11,6 +10,7 @@ import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.repository.CartRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+
 
 @Service
 public class CartService {
@@ -36,7 +36,14 @@ public class CartService {
     public CartDTOResponse getCartByCustomer(Customer customer) {
         Cart cart = findOrCreateCart(customer);
         double totalPrice = calculateTotal(cart);
-        return new CartDTOResponse(customer.getId(), cartMapper.toDTOResponse(cart).items(), totalPrice);
+        return new CartDTOResponse(
+                customer.getId(),
+                customer.getUsername(),
+                cartMapper.toDTOResponse(cart).items(),
+                totalPrice,
+                cart.getCreatedAt(),
+                cart.getUpdatedAt()
+        );
     }
 
     public CartDTOResponse addProductToCart(Customer customer, int productId) {
@@ -55,9 +62,15 @@ public class CartService {
             cart.getItems().add(newItem);
         }
 
-        double totalPrice = calculateTotal(cart);
         cartRepository.save(cart);
-        return new CartDTOResponse(cart.getCustomer().getId(), cartMapper.toDTOResponse(cart).items(), totalPrice);
+        return new CartDTOResponse(
+                customer.getId(),
+                customer.getUsername(),
+                cartMapper.toDTOResponse(cart).items(),
+                calculateTotal(cart),
+                cart.getCreatedAt(),
+                cart.getUpdatedAt()
+        );
     }
 
     private double calculateTotal(Cart cart) {
