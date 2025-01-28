@@ -24,24 +24,24 @@ public class ProductService {
         this.productMapper = productMapper;
     }
 
-    public List<ProductSummaryDTOResponse> getProducts(){
+    public List<ProductDTOResponse> getProducts(){
         List<Product> products = productRepository.findAll();
         if (products.isEmpty()) throw new ProductsNotFoundException();
-        List<ProductSummaryDTOResponse> productSummaryDTOResponseList = products.stream()
-                .map(product -> productMapper.toSummaryDTOResponse(product))
+        List<ProductDTOResponse> productSummaryDTOResponseList = products.stream()
+                .map(product -> productMapper.toDTOResponse(product))
                 .toList();
         return productSummaryDTOResponseList;
     }
-    public ProductSummaryDTOResponse createProduct(ProductSummaryDTORequest productSummaryDTORequest){
-        Product newProduct = productMapper.fromSummaryDTOToEntity(productSummaryDTORequest);
+    public ProductDTOResponse createProduct(ProductDTORequest productDTORequest){
+        Product newProduct = productMapper.toEntity(productDTORequest);
         Product savedProduct = productRepository.save(newProduct);
-        return productMapper.toSummaryDTOResponse(savedProduct);
+        return productMapper.toDTOResponse(savedProduct);
     }
-    public Optional<ProductDetailDTOResponse> findProductById(int id){
+    public Optional<ProductDTOResponse> findProductById(int id){
         Optional<Product> foundProduct = productRepository.findById(id);
         if (foundProduct.isPresent()){
-            ProductDetailDTOResponse productDetailDTOResponseById = productMapper.toDetailDTOResponse(foundProduct.get());
-            return Optional.of(productDetailDTOResponseById);
+            ProductDTOResponse productDTOResponseById = productMapper.toDTOResponse(foundProduct.get());
+            return Optional.of(productDTOResponseById);
         }
         throw new ProductNotFoundException("ID", id);
     }
@@ -54,45 +54,46 @@ public class ProductService {
         }
 
     }
-    public ProductDetailDTOResponse updatedProduct(int id, ProductDetailDTORequest updateProductDetailDTORequest){
+    public ProductDTOResponse updatedProduct(int id, ProductDTORequest updateProductDTORequest){
         Optional<Product> existingProduct = productRepository.findById(id);
         if (existingProduct.isPresent()){
             Product productToUpdate = existingProduct.get();
-            productToUpdate.setName(updateProductDetailDTORequest.name());
-            productToUpdate.setPrice(updateProductDetailDTORequest.price());
-            productToUpdate.setImageUrl(updateProductDetailDTORequest.imageUrl());
-            productToUpdate.setFeatured(updateProductDetailDTORequest.featured());
+            productToUpdate.setName(updateProductDTORequest.name());
+            productToUpdate.setPrice(updateProductDTORequest.price());
+            productToUpdate.setDescription(updateProductDTORequest.description());
+            productToUpdate.setImageUrl(updateProductDTORequest.imageUrl());
+            productToUpdate.setFeatured(updateProductDTORequest.featured());
 
-            if (updateProductDetailDTORequest.categoryId() != null) {
-                Optional<Category> category = categoryRepository.findById(updateProductDetailDTORequest.categoryId());
+            if (updateProductDTORequest.categoryId() != null) {
+                Optional<Category> category = categoryRepository.findById(updateProductDTORequest.categoryId());
                 if (category.isPresent()) {
                     productToUpdate.setCategory(category.get());
                 } else {
-                    throw new CategoryNotFoundException("ID", updateProductDetailDTORequest.categoryId());
+                    throw new CategoryNotFoundException("ID", updateProductDTORequest.categoryId());
                 }
             }
             Product updatedProduct = productRepository.save(productToUpdate);
-            return productMapper.toDetailDTOResponse(updatedProduct);
+            return productMapper.toDTOResponse(updatedProduct);
         }
         throw new ProductNotFoundException("ID", id);
     }
 
-    public List<ProductSummaryDTOResponse> getProductsByCategory (String categoryName){
+    public List<ProductDTOResponse> getProductsByCategory (String categoryName){
         Category category = categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> new CategoryNotFoundException("name", categoryName));
 
         List<Product> productsByCategory = productRepository.findByCategory(category);
 
         return productsByCategory.stream()
-                .map(productMapper::toSummaryDTOResponse)
+                .map(productMapper::toDTOResponse)
                 .toList();
     }
 
-    public List<ProductSummaryDTOResponse> getProductsByPriceRange(double minPrice, double maxPrice) {
+    public List<ProductDTOResponse> getProductsByPriceRange(double minPrice, double maxPrice) {
         if (minPrice > maxPrice) throw new InvalidPriceRangeException(minPrice, maxPrice);
         List<Product> productsByPrice = productRepository.findByPriceBetween(minPrice, maxPrice);
         return productsByPrice.stream()
-                .map(product -> productMapper.toSummaryDTOResponse(product)).toList();
+                .map(product -> productMapper.toDTOResponse(product)).toList();
     }
 
 
