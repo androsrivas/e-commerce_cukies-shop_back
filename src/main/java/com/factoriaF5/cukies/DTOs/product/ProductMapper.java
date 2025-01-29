@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.DTOs.product;
 
 import com.factoriaF5.cukies.model.Product;
+import com.factoriaF5.cukies.repository.CategoryRepository;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

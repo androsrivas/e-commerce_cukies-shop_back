@@ -1,5 +1,7 @@
 package com.factoriaF5.cukies.DTOs.product;
 
+import com.factoriaF5.cukies.DTOs.category.CategoryDTORequest;
+import com.factoriaF5.cukies.DTOs.category.CategoryDTOResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
