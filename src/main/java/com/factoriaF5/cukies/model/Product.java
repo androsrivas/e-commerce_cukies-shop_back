@@ -39,15 +39,14 @@ public class Product {
         this.imageUrl = imageUrl;
         this.description = description;
         this.featured = featured;
-
     }
 
-    public Product(String name, double price, String imageUrl, boolean featured, Category category) {
+    public Product(String name, double price, String description, String imageUrl, boolean featured, Category category) {
         this.name = name;
         this.price = price;
+        this.description = description;
         this.imageUrl = imageUrl;
         this.featured = featured;
         this.category = category;
-
     }
 }
