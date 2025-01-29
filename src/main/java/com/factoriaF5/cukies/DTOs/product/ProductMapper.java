@@ -1,19 +1,17 @@
 package com.factoriaF5.cukies.DTOs.product;
 
-
-import com.factoriaF5.cukies.DTOs.category.CategoryDTOResponse;
-import com.factoriaF5.cukies.DTOs.category.CategoryMapper;
-
-import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
-    ProductDetailDTOResponse toDetailDTOResponse (Product product);
-    ProductSummaryDTOResponse toSummaryDTOResponse (Product product);
-    Product fromSummaryDTOToEntity (ProductSummaryDTORequest productSummaryDTORequest);
+    @Mapping(source = "category.name", target = "categoryName")
+    ProductDTOResponse toDTOResponse(Product product);
+
+    Product toEntity(ProductDTORequest productDTORequest);
+
 //    public static Product dtoToEntity(ProductSummaryDTORequest productSummaryDTORequest, CategoryRepository categoryRepository){
 //        Category category = categoryRepository.findById(productSummaryDTORequest.categoryId())
 //                .orElseThrow(() -> new RuntimeException("Category not found"));

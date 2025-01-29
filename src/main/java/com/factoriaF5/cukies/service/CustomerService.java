@@ -56,6 +56,11 @@ public class CustomerService {
                .orElseThrow(() -> new CustomerNotFoundException("ID", id));
     }
 
+    public Customer findById(int id) {
+        return customerRepository.findById(id)
+                .orElseThrow(() -> new CustomerNotFoundException("ID", id));
+    }
+
     @Transactional(readOnly = true)
     public CustomerDTOResponse findCustomerByUsername(String username) {
         return customerRepository.findByUsername(username)
