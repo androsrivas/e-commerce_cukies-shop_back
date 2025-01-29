@@ -94,6 +94,13 @@ public class ProductService {
         return productsByPrice.stream()
                 .map(product -> productMapper.toSummaryDTOResponse(product)).toList();
     }
+    public List<Product> filterProducts(String categoryName, Double minPrice, Double maxPrice) {
+        if (categoryName != null && !categoryName.isEmpty()) {
+            return productRepository.findByCategoryNameAndPriceBetween(categoryName, minPrice, maxPrice);
+        } else {
+            return productRepository.findByPriceBetween(minPrice, maxPrice);
+        }
+    }
 
 
 }
