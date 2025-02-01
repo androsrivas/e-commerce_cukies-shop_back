@@ -75,7 +75,7 @@ public class DBInitializer {
                 "Kawaii Cat Pen Set",
                 15.99,
                 "Set de bolígrafos con dibujos adorables de gatos, perfecto para los amantes del kawaii.",
-                "https://example.com/kawaii-cat-pen-set.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 stationery
         );
@@ -85,7 +85,7 @@ public class DBInitializer {
                 "Bunny Sticky Note",
                 6.50,
                 "Notas adhesivas con forma de conejito, para añadir un toque dulce a tus tareas diárias.",
-                "https://example.com/bunny-sticky-note.jpg",
+                "https://picsum.photos/200/300",
                 false,
                 stationery
         );
@@ -95,7 +95,7 @@ public class DBInitializer {
                 "Panda Pencil Case",
                 12.99,
                 "Estuche de lápices con diseño de panda, ideal para mantener tus herramientas de escritorio organizadas y con estilo.",
-                "https://example.com/panda-pencil-case.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 stationery
         );
@@ -105,7 +105,7 @@ public class DBInitializer {
                 "Sakura Blossom Necklace",
                 18.00,
                 "Collar delicado con un colgante en forma de flor de sakura, perfecto para añadir un toque floral a tu look.",
-                "https://example.com/sakura-blossom-necklace.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 accessories
         );
@@ -115,7 +115,7 @@ public class DBInitializer {
                 "Kawaii Cat Earrings",
                 10.50,
                 "Pendientes pequeños y adorables con forma de gato, para aquellos que quieren llevar lo kawaii en sus orejas.",
-                "https://example.com/kawaii-cat-earrings.jpg",
+                "https://picsum.photos/200/300",
                 false,
                 accessories
         );
@@ -125,7 +125,7 @@ public class DBInitializer {
                 "Unicorn Hair Clip",
                 7.25,
                 "Pinza para el pelo con diseño de unicornio, para añadir un toque mágico y colorido a tu peinado.",
-                "https://example.com/unicorn-hair-clip.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 accessories
         );
@@ -135,7 +135,7 @@ public class DBInitializer {
                 "Mochi Plush Bear",
                 22.00,
                 "Manta de peluche suave y resistente, con diseño de oso, ideal para abrazar o decorar tu habitación.",
-                "https://example.com/mochi-plush-bear.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 plush_toys
         );
@@ -145,7 +145,7 @@ public class DBInitializer {
                 "Kawaii Alpaca Plush",
                 19.50,
                 "Un peluche de alpaca con una cara sonriente encantadora, perfecta para regalar o decorar.",
-                "https://example.com/kawaii-alpaca-plush.jpg",
+                "https://picsum.photos/200/300",
                 false,
                 plush_toys
         );
@@ -155,7 +155,7 @@ public class DBInitializer {
                 "Kitsune Plush Toy",
                 25.99,
                 "Peluche suave y acogedor en forma de kitsune (zorrito), una mascota dulce y encantadora para cualquier coleccionista.",
-                "https://example.com/kitsune-plush-fox.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 plush_toys
         );
@@ -165,7 +165,7 @@ public class DBInitializer {
                 "Kawaii Cat Hoodie",
                 32.00,
                 "Sudadera con capucha de estilo kawaii con una impresión de gato adorable. Perfecta para esos días fríos.",
-                "https://example.com/kawaii-cat-hoodie.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 clothes
         );
@@ -175,7 +175,7 @@ public class DBInitializer {
                 "Sakura Kimono Robe",
                 45.00,
                 "Kimono tradicional japonés con diseño floral de sakura, ideal para un look elegante y relajado.",
-                "https://example.com/sakura-kimono-robe.jpg",
+                "https://picsum.photos/200/300",
                 false,
                 clothes
         );
@@ -185,7 +185,7 @@ public class DBInitializer {
                 "Bunny Pajama Set",
                 28.50,
                 "Pijama con diseño de conejito, súper cómodo y ideal para descansar con estilo kawaii.",
-                "https://example.com/bunny-pajama-set.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 clothes
         );
@@ -195,7 +195,7 @@ public class DBInitializer {
                 "Mini Cat USB Charger",
                 12.99,
                 "Cargador USB para dispositivos con diseño de gato, compacto y práctico para llevar a cualquier lugar.",
-                "https://example.com/mini-cat-usb-charger.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 lifestyle_gadgets
         );
@@ -205,7 +205,7 @@ public class DBInitializer {
                 "Kawaii Cat Alarm Clock",
                 20.99,
                 "Reloj despertador con diseño de gato, para aquellos que quieren comenzar el día con una sonrisa.",
-                "https://example.com/kawaii-cat-alarm-clock.jpg",
+                "https://picsum.photos/200/300",
                 false,
                 lifestyle_gadgets
         );
@@ -215,7 +215,7 @@ public class DBInitializer {
                 "Panda Power Bank",
                 18.50,
                 "Power bank portátil con diseño de panda, para mantener tus dispositivos cargados y con un toque kawaii.",
-                "https://example.com/panda-power-bank.jpg",
+                "https://picsum.photos/200/300",
                 true,
                 lifestyle_gadgets
         );
