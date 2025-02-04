@@ -15,25 +15,27 @@ import java.util.Optional;
 @Service
 public class CategoryService {
     private final CategoryRepository categoryRepository;
+    private final CategoryMapper categoryMapper;
 
-    public CategoryService(CategoryRepository categoryRepository) {
+    public CategoryService(CategoryRepository categoryRepository, CategoryMapper categoryMapper) {
         this.categoryRepository = categoryRepository;
+        this.categoryMapper = categoryMapper;
     }
     public CategoryDTOResponse createCategory(CategoryDTORequest categoryDTORequest){
-        Category newCategory = CategoryMapper.dtoToEntity(categoryDTORequest);
+        Category newCategory = categoryMapper.toEntity(categoryDTORequest);
         Category savedCategory = categoryRepository.save(newCategory);
-        return CategoryMapper.entityToDTO(savedCategory);
+        return categoryMapper.toDTOResponse(savedCategory);
     }
     public List<CategoryDTOResponse> getCategories(){
         List<Category> categories = categoryRepository.findAll();
         if (categories.isEmpty()) throw new CategoriesNotFoundException();
-        List<CategoryDTOResponse> listCategories = categories.stream().map(category -> CategoryMapper.entityToDTO(category)).toList();
+        List<CategoryDTOResponse> listCategories = categories.stream().map(category -> categoryMapper.toDTOResponse(category)).toList();
         return listCategories;
     }
     public Optional<CategoryDTOResponse> findCategoryById(int id){
         Optional<Category> foundCategory = categoryRepository.findById(id);
         if (foundCategory.isPresent()){
-            CategoryDTOResponse categoryDTOById = CategoryMapper.entityToDTO(foundCategory.get());
+            CategoryDTOResponse categoryDTOById = categoryMapper.toDTOResponse(foundCategory.get());
             return Optional.of(categoryDTOById);
         }
         throw new CategoryNotFoundException("ID", id);
@@ -49,6 +51,6 @@ public class CategoryService {
         category.setName(categoryDTORequest.name());
 
         Category updatedCategory = categoryRepository.save(category);
-        return CategoryMapper.entityToDTO(updatedCategory);
+        return categoryMapper.toDTOResponse(updatedCategory);
     }
 }
