@@ -12,14 +12,12 @@ import java.util.stream.Collectors;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //maneja excepciones específicas que extienden de ApiException
     @ExceptionHandler(ApiException.class)
      public ResponseEntity<ErrorResponse> handleApiException(ApiException e) {
          ErrorResponse errorResponse = new ErrorResponse(e.getMessages(), e.getStatus());
         return new ResponseEntity<>(errorResponse, e.getStatus());
      }
 
-     //maneja excepciones de validación
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidationException(MethodArgumentNotValidException e) {
         List<String> errors = e.getBindingResult().getAllErrors()
@@ -30,7 +28,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(new ErrorResponse(errors, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
     }
 
-    //maneja excepciones genéricas
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(Exception e) {
         ErrorResponse errorResponse = new ErrorResponse(
@@ -40,7 +37,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    //maneja excepciones si hay problemas con la conexión de la base de datos
     @ExceptionHandler(DataAccessException.class)
     public ResponseEntity<ErrorResponse> handleDatabaseException(DataAccessException e) {
         ErrorResponse errorResponse = new ErrorResponse(

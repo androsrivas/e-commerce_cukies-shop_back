@@ -10,6 +10,7 @@ import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.repository.CartRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
@@ -48,6 +49,7 @@ public class CartService {
         );
     }
 
+    @Transactional
     public CartDTOResponse addProductToCart(Customer customer, int productId) {
         Cart cart = findOrCreateCart(customer);
         Product product = productRepository.findById(productId)
@@ -75,6 +77,7 @@ public class CartService {
         );
     }
 
+    @Transactional
     public CartDTOResponse removeProductFromCart (Customer customer, int productId) {
         Cart cart = findOrCreateCart(customer);
         Product product = productRepository.findById(productId)
@@ -113,6 +116,7 @@ public class CartService {
         );
     }
 
+    @Transactional
     public CartDTOResponse clearCart (Customer customer) {
         Cart cart = cartRepository.findByCustomer(customer)
                 .orElseGet(() -> new Cart(customer));

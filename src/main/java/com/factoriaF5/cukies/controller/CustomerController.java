@@ -1,7 +1,6 @@
 package com.factoriaF5.cukies.controller;
 
 import com.factoriaF5.cukies.DTOs.customer.*;
-import com.factoriaF5.cukies.exception.customer.CustomerNotFoundException;
 import com.factoriaF5.cukies.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
