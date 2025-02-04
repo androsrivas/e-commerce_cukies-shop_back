@@ -8,6 +8,7 @@ import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +33,15 @@ public class ProductService {
                 .toList();
         return productSummaryDTOResponseList;
     }
+
+    @Transactional
     public ProductDTOResponse createProduct(ProductDTORequest productDTORequest){
+        Category category = categoryRepository.findById(productDTORequest.categoryId())
+                .orElseThrow(() -> new CategoryNotFoundException("ID", productDTORequest.categoryId()));
+
         Product newProduct = productMapper.toEntity(productDTORequest);
+        newProduct.setCategory(category);
+
         Product savedProduct = productRepository.save(newProduct);
         return productMapper.toDTOResponse(savedProduct);
     }
