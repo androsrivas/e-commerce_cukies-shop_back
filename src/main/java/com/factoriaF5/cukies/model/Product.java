@@ -33,6 +33,9 @@ public class Product {
     )
     private List<Customer> customers;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
+
     public Product(String name, double price, String imageUrl, String description, boolean featured) {
         this.name = name;
         this.price = price;
