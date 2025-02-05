@@ -3,6 +3,7 @@ package com.factoriaF5.cukies.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor @NoArgsConstructor
@@ -17,7 +18,6 @@ public class Product {
     @Column(nullable = false)
     private String name;
     private double price;
-    private String imageUrl;
     private String description;
     private boolean featured;
 
@@ -33,23 +33,29 @@ public class Product {
     )
     private List<Customer> customers;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images;
+    @OneToOne(mappedBy = "product", cascade = CascadeType.ALL)
+    private Image image;
 
-    public Product(String name, double price, String imageUrl, String description, boolean featured) {
+    public Product(String name, double price, boolean featured) {
         this.name = name;
         this.price = price;
-        this.imageUrl = imageUrl;
-        this.description = description;
         this.featured = featured;
     }
 
-    public Product(String name, double price, String description, String imageUrl, boolean featured, Category category) {
+    public Product(String name, double price, String description, boolean featured, Image image) {
         this.name = name;
         this.price = price;
         this.description = description;
-        this.imageUrl = imageUrl;
+        this.featured = featured;
+        this.image = image;
+    }
+
+    public Product(String name, double price, String description, boolean featured, Category category, Image image) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
         this.featured = featured;
         this.category = category;
+        this.image = image;
     }
 }

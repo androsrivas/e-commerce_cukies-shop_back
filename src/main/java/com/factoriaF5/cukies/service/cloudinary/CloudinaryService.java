@@ -1,6 +1,7 @@
 package com.factoriaF5.cukies.service.cloudinary;
 
 import com.cloudinary.Cloudinary;
+import com.factoriaF5.cukies.exception.image.ImageUploadException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,8 +25,7 @@ public class CloudinaryService {
             String publicId = (String) uploadedFile.get("public_id");
             return cloudinary.url().secure(true).generate(publicId);
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new ImageUploadException(file.getName());
         }
     }
 }

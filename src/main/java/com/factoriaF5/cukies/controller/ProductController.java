@@ -7,8 +7,11 @@ import com.factoriaF5.cukies.exception.product.ProductNotFoundException;
 import com.factoriaF5.cukies.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,56 +27,44 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<ProductDTOResponse>> getAll(){
-        return new ResponseEntity<>(productService.getProducts(), HttpStatus.OK);
+        return ResponseEntity.ok(productService.getProducts());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductDTOResponse> getProductById(@PathVariable int id){
-        return productService.findProductById(id)
-                .map(product -> new ResponseEntity<>(product, HttpStatus.OK))
-                .orElseThrow(() -> new ProductNotFoundException("ID", id));
+    public ResponseEntity<ProductDTOResponse> getProductById(@PathVariable int id) {
+        return ResponseEntity.ok(productService.findProductById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<?> createProduct(@Valid @RequestBody ProductDTORequest productDTORequest) {
-        //Hay que buscar si existen categorías y añadir listas categorías
-        ProductDTOResponse newProductDTOResponse = productService.createProduct(productDTORequest);
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<ProductDTOResponse> createProduct(
+            @Valid @RequestPart("productDTORequest") ProductDTORequest productDTORequest,
+            @RequestPart("image") MultipartFile image
+    ) {
+        ProductDTOResponse newProductDTOResponse = productService.createProduct(productDTORequest, image);
         return new ResponseEntity<>(newProductDTOResponse, HttpStatus.CREATED);
     }
+
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTOResponse> updateProduct(
             @PathVariable int id,
-            @Valid @RequestBody ProductDTORequest updateProductDTORequest){
-        try {
-            ProductDTOResponse updatedProductDTOResponse = productService.updatedProduct(id, updateProductDTORequest);
-            return new ResponseEntity<>(updatedProductDTOResponse, HttpStatus.OK);
-        } catch (ProductNotFoundException e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } catch (CategoryNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProduct(@PathVariable int id){
-        Optional<ProductDTOResponse> productOptionalDTO = productService.findProductById(id);
-        if (productOptionalDTO.isPresent()){
-            productService.deleteProduct(id);
-            String message = "Product " + productOptionalDTO.get().name() + " has been deleted.";
-            return new ResponseEntity<>(message, HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
-    }
-    @GetMapping("/filter")
-    public ResponseEntity<List<ProductDTOResponse>> getProductsByCategory(@RequestParam String categoryName){
-        List<ProductDTOResponse> products = productService.getProductsByCategory(categoryName);
-        return new ResponseEntity<>(products, HttpStatus.OK);
-    }
-    @GetMapping("/filter/price")
-    public ResponseEntity<List<ProductDTOResponse>> getProductsByPriceRange(
-            @RequestParam double minPrice,
-            @RequestParam double maxPrice) {
-        List<ProductDTOResponse> products = productService.getProductsByPriceRange(minPrice, maxPrice);
-        return new ResponseEntity<>(products, HttpStatus.OK);
+            @Valid @RequestPart("productDTORequest") ProductDTORequest updateProductDTORequest,
+            @RequestPart("image") MultipartFile newImage){
+       ProductDTOResponse updatedProductDTOResponse = productService.updatedProduct(id, updateProductDTORequest, newImage);
+       return ResponseEntity.ok(updatedProductDTOResponse);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteProduct(@PathVariable int id){
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<List<ProductDTOResponse>> filterProducts(
+            @RequestParam(required = false) String categoryName,
+            @RequestParam(required = false) Double minPrice,
+            @RequestParam(required = false) Double maxPrice) {
+        List<ProductDTOResponse> filteredProducts = productService.filterProducts(categoryName, minPrice, maxPrice);
+        return ResponseEntity.ok(filteredProducts);
+    }
 }

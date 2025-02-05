@@ -12,7 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Image {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private UUID id;
 
@@ -22,13 +22,19 @@ public class Image {
     @Column(name = "image_url")
     private String url;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id", nullable = false)
+    @OneToOne
+    @JoinColumn(name = "product_id")
     private Product product;
 
     public Image(String name, String url) {
         this.name = name;
         this.url = url;
+    }
+
+    public Image(String name, String url, Product product) {
+        this.name = name;
+        this.url = url;
+        this.product = product;
     }
 
 }

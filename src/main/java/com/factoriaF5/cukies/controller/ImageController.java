@@ -18,18 +18,9 @@ public class ImageController {
     private ImageService imageService;
 
     @PostMapping("/upload")
-    public ResponseEntity<Map> upload(@RequestParam("name") String name,
-                                      @RequestParam("file") MultipartFile file,
-                                      @RequestParam("productId") Integer productId) {
-        if (file.isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of("error", "Fichero vacío."));
-        }
+    public ResponseEntity<ImageDTO> upload(@RequestParam(value = "file") MultipartFile file,
+                                      @RequestParam(value = "productId", required = false) Integer productId) {
 
-        ImageDTO imageDTO = new ImageDTO();
-        imageDTO.setName(name);
-        imageDTO.setFile(file);
-        imageDTO.setProductId(productId);
-
-        return imageService.uploadImage(imageDTO);
+        return imageService.uploadImage(productId, file);
     }
 }

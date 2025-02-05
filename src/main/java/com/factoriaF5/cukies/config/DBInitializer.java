@@ -2,27 +2,34 @@ package com.factoriaF5.cukies.config;
 
 import com.factoriaF5.cukies.model.Category;
 import com.factoriaF5.cukies.model.Customer;
+import com.factoriaF5.cukies.model.Image;
 import com.factoriaF5.cukies.model.Product;
 import com.factoriaF5.cukies.repository.CategoryRepository;
 import com.factoriaF5.cukies.repository.CustomerRepository;
+import com.factoriaF5.cukies.repository.ImageRepository;
 import com.factoriaF5.cukies.repository.ProductRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 @Component
 public class DBInitializer {
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
     private final CustomerRepository customerRepository;
+    private final ImageRepository imageRepository;
 
 
     public DBInitializer(
             ProductRepository productRepository,
             CategoryRepository categoryRepository,
-            CustomerRepository customerRepository) {
+            CustomerRepository customerRepository,
+            ImageRepository imageRepository) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
         this.customerRepository = customerRepository;
+        this.imageRepository = imageRepository;
     }
 
     @PostConstruct
@@ -74,153 +81,53 @@ public class DBInitializer {
         Product product1 = new Product(
                 "Kawaii Cat Pen Set",
                 15.99,
-                "Set de bolígrafos con dibujos adorables de gatos, perfecto para los amantes del kawaii.",
-                "https://picsum.photos/200/300",
-                true,
-                stationery
+                true
         );
+        product1.setCategory(stationery);
         productRepository.save(product1);
+        Image image1 = new Image("Image 1", "https://picsum.photos/200/300?random=1", product1);
+        imageRepository.save(image1);
 
         Product product2 = new Product(
                 "Bunny Sticky Note",
                 6.50,
-                "Notas adhesivas con forma de conejito, para añadir un toque dulce a tus tareas diárias.",
-                "https://picsum.photos/200/300",
-                false,
-                stationery
+                false
         );
+        product2.setCategory(stationery);
         productRepository.save(product2);
+        Image image2 = new Image("Image 3", "https://picsum.photos/200/300?random=3", product2);
+        imageRepository.save(image2);
 
-        Product product3 = new Product(
-                "Panda Pencil Case",
-                12.99,
-                "Estuche de lápices con diseño de panda, ideal para mantener tus herramientas de escritorio organizadas y con estilo.",
-                "https://picsum.photos/200/300",
-                true,
-                stationery
-        );
-        productRepository.save(product3);
-
-        Product product4 = new Product(
-                "Sakura Blossom Necklace",
-                18.00,
-                "Collar delicado con un colgante en forma de flor de sakura, perfecto para añadir un toque floral a tu look.",
-                "https://picsum.photos/200/300",
-                true,
-                accessories
-        );
-        productRepository.save(product4);
-
-        Product product5 = new Product(
-                "Kawaii Cat Earrings",
-                10.50,
-                "Pendientes pequeños y adorables con forma de gato, para aquellos que quieren llevar lo kawaii en sus orejas.",
-                "https://picsum.photos/200/300",
-                false,
-                accessories
-        );
-        productRepository.save(product5);
-
-        Product product6 = new Product(
-                "Unicorn Hair Clip",
-                7.25,
-                "Pinza para el pelo con diseño de unicornio, para añadir un toque mágico y colorido a tu peinado.",
-                "https://picsum.photos/200/300",
-                true,
-                accessories
-        );
-        productRepository.save(product6);
-
-        Product product7 = new Product(
-                "Mochi Plush Bear",
-                22.00,
-                "Manta de peluche suave y resistente, con diseño de oso, ideal para abrazar o decorar tu habitación.",
-                "https://picsum.photos/200/300",
-                true,
-                plush_toys
-        );
-        productRepository.save(product7);
-
-        Product product8 = new Product(
-                "Kawaii Alpaca Plush",
-                19.50,
-                "Un peluche de alpaca con una cara sonriente encantadora, perfecta para regalar o decorar.",
-                "https://picsum.photos/200/300",
-                false,
-                plush_toys
-        );
-        productRepository.save(product8);
-
-        Product product9 = new Product(
-                "Kitsune Plush Toy",
-                25.99,
-                "Peluche suave y acogedor en forma de kitsune (zorrito), una mascota dulce y encantadora para cualquier coleccionista.",
-                "https://picsum.photos/200/300",
-                true,
-                plush_toys
-        );
-        productRepository.save(product9);
-
-        Product product10 = new Product(
-                "Kawaii Cat Hoodie",
-                32.00,
-                "Sudadera con capucha de estilo kawaii con una impresión de gato adorable. Perfecta para esos días fríos.",
-                "https://picsum.photos/200/300",
-                true,
-                clothes
-        );
-        productRepository.save(product10);
-
-        Product product11 = new Product(
-                "Sakura Kimono Robe",
-                45.00,
-                "Kimono tradicional japonés con diseño floral de sakura, ideal para un look elegante y relajado.",
-                "https://picsum.photos/200/300",
-                false,
-                clothes
-        );
-        productRepository.save(product11);
-
-        Product product12 = new Product(
-                "Bunny Pajama Set",
-                28.50,
-                "Pijama con diseño de conejito, súper cómodo y ideal para descansar con estilo kawaii.",
-                "https://picsum.photos/200/300",
-                true,
-                clothes
-        );
-        productRepository.save(product12);
-
-        Product product13 = new Product(
-                "Mini Cat USB Charger",
-                12.99,
-                "Cargador USB para dispositivos con diseño de gato, compacto y práctico para llevar a cualquier lugar.",
-                "https://picsum.photos/200/300",
-                true,
-                lifestyle_gadgets
-        );
-        productRepository.save(product13);
-
-        Product product14 = new Product(
-                "Kawaii Cat Alarm Clock",
-                20.99,
-                "Reloj despertador con diseño de gato, para aquellos que quieren comenzar el día con una sonrisa.",
-                "https://picsum.photos/200/300",
-                false,
-                lifestyle_gadgets
-        );
-        productRepository.save(product14);
-
-        Product product15 = new Product(
-                "Panda Power Bank",
-                18.50,
-                "Power bank portátil con diseño de panda, para mantener tus dispositivos cargados y con un toque kawaii.",
-                "https://picsum.photos/200/300",
-                true,
-                lifestyle_gadgets
-        );
-        productRepository.save(product15);
-    }
+//        Product product3 = new Product(
+//                "Panda Pencil Case",
+//                12.99,
+//                "Estuche de lápices con diseño de panda, ideal para mantener tus herramientas de escritorio organizadas y con estilo.",
+//                true,
+//                stationery,
+//                List.of(image1, image2)
+//        );
+//        productRepository.save(product3);
+//
+//        Product product4 = new Product(
+//                "Sakura Blossom Necklace",
+//                18.00,
+//                "Collar delicado con un colgante en forma de flor de sakura, perfecto para añadir un toque floral a tu look.",
+//                true,
+//                accessories,
+//                List.of(image1, image2)
+//        );
+//        productRepository.save(product4);
+//
+//        Product product5 = new Product(
+//                "Kawaii Cat Earrings",
+//                10.50,
+//                "Pendientes pequeños y adorables con forma de gato, para aquellos que quieren llevar lo kawaii en sus orejas.",
+//                false,
+//                accessories,
+//                List.of(image1, image2)
+//        );
+//        productRepository.save(product5);
+   }
 
     public void initCustomers() {
         Customer customer1 = new Customer(

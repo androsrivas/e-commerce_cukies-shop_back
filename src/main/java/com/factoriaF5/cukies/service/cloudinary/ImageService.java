@@ -11,11 +11,13 @@ import com.factoriaF5.cukies.repository.ProductRepository;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Map;
 
 @Service
 public class ImageService {
+    private static final String CLOUDINARY_FOLDER = "cukies_shop";
     private final ImageRepository imageRepository;
     private final ProductRepository productRepository;
     private final CloudinaryService cloudinaryService;
@@ -29,24 +31,33 @@ public class ImageService {
     }
 
     @Transactional
-    public ResponseEntity<Map> uploadImage(ImageDTO imageModel) {
+    public ResponseEntity<ImageDTO> uploadImage(Integer productId, MultipartFile file) {
         try {
-            Product product = productRepository.findById(imageModel.getProductId())
-                    .orElseThrow(() -> new ProductNotFoundException("ID", imageModel.getProductId()));
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new ProductNotFoundException("ID", productId));
 
-            Image image = imageMapper.toEntity(imageModel);
-            image.setUrl(cloudinaryService.uploadImage(imageModel.getFile(), "folder_1"));
-            if (image.getUrl() == null) {
-                throw new ImageUploadException(imageModel.getName(), "No se ha podido subir la imagen al servidor.");
+            String imageName = "image-" + cleanProductName(file.getName());
+            String imageUrl = cloudinaryService.uploadImage(file, CLOUDINARY_FOLDER);
+
+            if (imageUrl == null) {
+                throw new ImageUploadException(file.getOriginalFilename());
             }
-            image.setProduct(product);
+
+            Image image = new Image(imageName, imageUrl);
             imageRepository.save(image);
 
-            ImageDTO responseDTO = imageMapper.toDTO(image);
-            return ResponseEntity.ok().body(Map.of("url", image.getUrl()));
+            return ResponseEntity.ok(imageMapper.toDTO(image));
+        } catch (ImageUploadException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
         } catch (Exception e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body(Map.of("error", "Internal Server Error."));
+            return ResponseEntity.internalServerError().build();
         }
+    }
+
+    private String cleanProductName(String productName) {
+        if (productName == null) return "";
+        return productName.replace("[^a-zA-Z0-9_]", "_");
     }
 }
